@@ -1,0 +1,18 @@
+{
+    "version": 2,
+    "functions": {
+      "Server/manage.py": {
+        "includeFiles": "Server/**"
+      }
+    },
+    "routes": [
+      {
+        "src": "/api/(.*)",
+        "dest": "Server/manage.py"
+      }
+    ],
+    "env": {
+      "DJANGO_SETTINGS_MODULE": "Project.settings"
+    }
+  }
+  
