@@ -1,0 +1,11 @@
+Server/
+api/
+*.py
+*.pyc
+__pycache__/
+.env
+requirements.txt
+db.sqlite3
+venv/
+.git/
+.vscode/

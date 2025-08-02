@@ -1,34 +1,6 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "Client/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "Server/manage.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "Server/manage.py"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "Client/dist/$1"
-    }
-  ],
-  "env": {
-    "DJANGO_SETTINGS_MODULE": "Project.settings"
-  },
-  "functions": {
-    "Server/manage.py": {
-      "includeFiles": "Server/**"
-    }
-  }
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "cd Client && npm run build",
+  "outputDirectory": "Client/dist",
+  "installCommand": "cd Client && npm install"
 }
