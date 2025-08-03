@@ -119,10 +119,10 @@ pip install -r requirements.txt
 Create a `.env` file in the `Server/` directory:
 ```env
 # MongoDB Configuration
-MONGODB_URI=mongodb+srv://admin:admin%402023@cluster0.u3djt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-MONGODB_DB_NAME=taskflow_db
-MONGODB_USERNAME=admin
-MONGODB_PASSWORD=admin@2023
+MONGODB_URI=
+MONGODB_DB_NAME=
+MONGODB_USERNAME=
+MONGODB_PASSWORD=
 
 # Django Configuration
 DEBUG=True
@@ -250,43 +250,6 @@ npm run preview
 npm install package_name
 ```
 
-## 🚀 Deployment to Vercel
-
-### 1. Push to GitHub
-```bash
-git add .
-git commit -m "Ready for deployment"
-git push origin main
-```
-
-### 2. Deploy on Vercel
-1. Go to [vercel.com](https://vercel.com)
-2. Import your GitHub repository
-3. Configure build settings:
-   - **Framework Preset**: Other
-   - **Build Command**: `cd Client && npm run build`
-   - **Output Directory**: `Client/dist`
-
-### 3. Set Environment Variables in Vercel Dashboard
-
-**For Frontend-Only Deployment:**
-```env
-VITE_API_URL=https://your-backend-api.com/api
-```
-
-**For Full-Stack Deployment (if backend is also deployed):**
-```env
-VITE_API_URL=https://your-backend-api.com/api
-MONGODB_URI=mongodb+srv://admin:admin%402023@cluster0.u3djt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-MONGODB_DB_NAME=taskflow_production
-MONGODB_USERNAME=admin
-MONGODB_PASSWORD=admin@2023
-DEBUG=False
-SECRET_KEY=your-production-secret-key
-CORS_ALLOW_ALL_ORIGINS=True
-DJANGO_SETTINGS_MODULE=Project.settings
-```
-
 **Note:** Currently configured for frontend-only deployment. Update `VITE_API_URL` with your actual backend URL when available.
 
 ## 🛡️ Security Features
@@ -299,36 +262,6 @@ DJANGO_SETTINGS_MODULE=Project.settings
 - ✅ **CORS Protection** configured properly
 - ✅ **Input Validation** on all endpoints
 
-## 🐛 Troubleshooting
-
-### Common Issues
-
-#### Backend Issues
-```bash
-# MongoDB connection failed
-- Check internet connection
-- Verify MongoDB URI in .env file
-- Ensure MongoDB Atlas IP whitelist includes your IP
-
-# Module not found
-- Activate virtual environment: venv\Scripts\activate
-- Install requirements: pip install -r requirements.txt
-
-# Port already in use
-- Kill process: taskkill /f /im python.exe  # Windows
-- Or use different port: python manage.py runserver 8001
-```
-
-#### Frontend Issues
-```bash
-# API connection failed
-- Ensure Django server is running on port 8000
-- Check CORS settings in Django settings.py
-
-# npm install fails
-- Clear cache: npm cache clean --force
-- Delete node_modules and reinstall: rm -rf node_modules && npm install
-```
 
 ### Debug Tips
 - Check browser developer console for frontend errors
@@ -336,14 +269,3 @@ DJANGO_SETTINGS_MODULE=Project.settings
 - Monitor Django server logs in terminal
 - Test API endpoints with curl or Postman
 
-## 📞 Support
-
-If you encounter issues:
-1. Check this README for solutions
-2. Verify all environment variables are set correctly
-3. Ensure both servers are running
-4. Check browser developer tools for errors
-
----
-
-**🎉 Your TaskFlow application is ready! Start managing your tasks efficiently!**
