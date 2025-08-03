@@ -88,7 +88,7 @@ TaskFlow/
 
 ### 1. Clone the Repository
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/Kalparatna/TaskFlow-Task-Manager.git
 cd TaskFlow
 ```
 
@@ -126,7 +126,7 @@ MONGODB_PASSWORD=
 
 # Django Configuration
 DEBUG=True
-SECRET_KEY=django-insecure-sgfas)t_8hf721v1seja&@45u55(*3387g__mzd4ahme0zsgol
+SECRET_KEY=your django secret key
 DJANGO_SETTINGS_MODULE=Project.settings
 
 # CORS Configuration
