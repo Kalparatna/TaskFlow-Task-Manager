@@ -1,19 +1,20 @@
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.contrib.auth.models import User
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
 from .mongodb_service import task_service
+from .user_service import user_service
+from .auth_backend import MongoDBAuthBackend
 
 # Simple user registration serializer
 from rest_framework import serializers
 
-class UserRegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+class UserRegistrationSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150)
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True, min_length=6)
     password_confirm = serializers.CharField(write_only=True)
-
-    class Meta:
-        model = User
-        fields = ['username', 'email', 'password', 'password_confirm']
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password_confirm']:
@@ -22,13 +23,65 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data.pop('password_confirm')
-        user = User.objects.create_user(**validated_data)
-        return user
+        try:
+            user_data = user_service.create_user(**validated_data)
+            return user_data
+        except ValueError as e:
+            raise serializers.ValidationError(str(e))
 
-class UserRegistrationView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserRegistrationSerializer
+class UserLoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+class UserRegistrationView(APIView):
     permission_classes = [permissions.AllowAny]
+    
+    def post(self, request):
+        serializer = UserRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            try:
+                user_data = serializer.save()
+                return Response({
+                    'message': 'User registered successfully',
+                    'user': user_data
+                }, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({
+                    'error': str(e)
+                }, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UserLoginView(APIView):
+    permission_classes = [permissions.AllowAny]
+    
+    def post(self, request):
+        serializer = UserLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            username = serializer.validated_data['username']
+            password = serializer.validated_data['password']
+            
+            # Authenticate using MongoDB
+            user_data = user_service.authenticate_user(username, password)
+            
+            if user_data:
+                # Create JWT tokens
+                from .auth_backend import MongoDBUser
+                user_obj = MongoDBUser(user_data)
+                refresh = RefreshToken()
+                refresh['user_id'] = user_data['id']
+                refresh['username'] = user_data['username']
+                
+                return Response({
+                    'access': str(refresh.access_token),
+                    'refresh': str(refresh),
+                    'user': user_data
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    'error': 'Invalid credentials'
+                }, status=status.HTTP_401_UNAUTHORIZED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class TaskListCreateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -36,6 +89,7 @@ class TaskListCreateView(APIView):
     def get(self, request):
         """Get all tasks for the authenticated user"""
         try:
+            # Use MongoDB user ID (string format)
             tasks = task_service.get_tasks_by_user(request.user.id)
             return Response(tasks, status=status.HTTP_200_OK)
         except Exception as e:
@@ -57,6 +111,7 @@ class TaskListCreateView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
+            # Use MongoDB user ID (string format)
             task = task_service.create_task(title, description, request.user.id, completed)
             
             return Response(task, status=status.HTTP_201_CREATED)

@@ -70,7 +70,7 @@ class TaskService:
     def __init__(self):
         self.collection = mongodb_service.tasks_collection
 
-    def create_task(self, title: str, description: str, user_id: int, completed: bool = False) -> Dict:
+    def create_task(self, title: str, description: str, user_id: str, completed: bool = False) -> Dict:
         """Create a new task"""
         task_data = {
             'title': title,
@@ -87,12 +87,12 @@ class TaskService:
         
         return self._format_task(task_data)
 
-    def get_tasks_by_user(self, user_id: int) -> List[Dict]:
+    def get_tasks_by_user(self, user_id: str) -> List[Dict]:
         """Get all tasks for a specific user"""
         tasks = list(self.collection.find({'user_id': user_id}).sort('created_at', -1))
         return [self._format_task(task) for task in tasks]
 
-    def get_task_by_id(self, task_id: str, user_id: int) -> Optional[Dict]:
+    def get_task_by_id(self, task_id: str, user_id: str) -> Optional[Dict]:
         """Get a specific task by ID and user"""
         try:
             object_id = ObjectId(task_id)
@@ -102,7 +102,7 @@ class TaskService:
             logger.error(f"Error getting task {task_id}: {e}")
             return None
 
-    def update_task(self, task_id: str, user_id: int, update_data: Dict) -> Optional[Dict]:
+    def update_task(self, task_id: str, user_id: str, update_data: Dict) -> Optional[Dict]:
         """Update a task"""
         try:
             object_id = ObjectId(task_id)
@@ -121,7 +121,7 @@ class TaskService:
             logger.error(f"Error updating task {task_id}: {e}")
             return None
 
-    def delete_task(self, task_id: str, user_id: int) -> bool:
+    def delete_task(self, task_id: str, user_id: str) -> bool:
         """Delete a task"""
         try:
             object_id = ObjectId(task_id)

@@ -90,10 +90,16 @@ CORS_ALLOW_ALL_ORIGINS = os.environ['CORS_ALLOW_ALL_ORIGINS'].lower() == 'true'
 CORS_ALLOWED_ORIGINS = os.environ['CORS_ALLOWED_ORIGINS'].split(',')
 CORS_ALLOW_CREDENTIALS = True
 
+# Authentication backends
+AUTHENTICATION_BACKENDS = [
+    'App.auth_backend.MongoDBAuthBackend',
+    'django.contrib.auth.backends.ModelBackend',  # Keep as fallback
+]
+
 # DRF & JWT settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'App.jwt_auth.MongoDBJWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
