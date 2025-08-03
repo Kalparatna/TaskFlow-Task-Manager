@@ -1,11 +1,7 @@
 Server/
-api/
-*.py
-*.pyc
-__pycache__/
-.env
-requirements.txt
-db.sqlite3
 venv/
 .git/
 .vscode/
+*.pyc
+__pycache__/
+db.sqlite3
