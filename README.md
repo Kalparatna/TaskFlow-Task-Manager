@@ -28,6 +28,29 @@ A modern, full-stack task management application built with Django REST Framewor
 - **TailwindCSS** - Utility-first CSS framework
 - **Axios** - HTTP client
 
+## 🔧 Environment Variables
+
+### Frontend (Client/.env)
+```bash
+# Backend API URL
+VITE_API_URL=http://localhost:8000/api  # For development
+# VITE_API_URL=https://your-backend-api.com/api  # For production
+```
+
+### Backend (Server/.env)
+```bash
+# Django Settings
+SECRET_KEY=your-secret-key
+DEBUG=True
+
+# MongoDB Configuration
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/database
+MONGODB_DB_NAME=your-database-name
+
+# CORS Settings
+CORS_ALLOWED_ORIGINS=http://localhost:5173,https://your-frontend-domain.com
+```
+
 ## 📁 Project Structure
 
 ```
@@ -245,7 +268,15 @@ git push origin main
    - **Output Directory**: `Client/dist`
 
 ### 3. Set Environment Variables in Vercel Dashboard
+
+**For Frontend-Only Deployment:**
 ```env
+VITE_API_URL=https://your-backend-api.com/api
+```
+
+**For Full-Stack Deployment (if backend is also deployed):**
+```env
+VITE_API_URL=https://your-backend-api.com/api
 MONGODB_URI=mongodb+srv://admin:admin%402023@cluster0.u3djt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 MONGODB_DB_NAME=taskflow_production
 MONGODB_USERNAME=admin
@@ -255,6 +286,8 @@ SECRET_KEY=your-production-secret-key
 CORS_ALLOW_ALL_ORIGINS=True
 DJANGO_SETTINGS_MODULE=Project.settings
 ```
+
+**Note:** Currently configured for frontend-only deployment. Update `VITE_API_URL` with your actual backend URL when available.
 
 ## 🛡️ Security Features
 

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || (
   import.meta.env.PROD 
-    ? '/api' 
+    ? 'https://your-backend-api.com/api' // Replace with actual backend URL
     : 'http://localhost:8000/api'
 );
 
